@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AVISHKAR 2k26 Hackathon - Problem Statements and Registration Portal">
+    <title>AVISHKAR 2k26 Portal | Problem Statements</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .table-responsive {
+            max-height: 800px;
+            overflow-y: auto;
+            overflow-x: auto;
+            border-radius: var(--radius-sm);
+        }
+
+        .data-table th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: var(--primary);
+            /* match header */
+            white-space: normal;
+        }
+
+        .data-table td {
+            white-space: normal;
+        }
+
+        .objective-text {
+            white-space: pre-wrap;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .action-flex {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slots-info {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gray-700);
+        }
+
+        .action-flex .btn {
+            font-size: 1.1rem;
+            padding: 10px 24px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════ NAVBAR ═══════ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-icon">⚡</div>
+                <div>
+                    <h1 class="nav-title">AVISHKAR 2k26 Portal</h1>
+                    <p class="nav-subtitle">Innovation • Technology • Impact</p>
+                </div>
+            </div>
+            <!-- Nav links removed -->
+        </div>
+    </nav>
+
+    <!-- ═══════ HERO SECTION ═══════ -->
+    <section class="hero">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-content">
+            <div class="hero-badge">📋 Official Problem Statements</div>
+            <h2 class="hero-title">PROBLEM STATEMENTS</h2>
+            <p class="hero-description">Choose your problem statement and register your team for the hackathon</p>
+            <div class="stats-row" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_domains }}</div>
+                    <div class="stat-label">Total Domains</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ problems | length }}</div>
+                    <div class="stat-label">Total Topics</div>
+                </div>
+                <div class="stat-card accent">
+                    <div class="stat-number">{{ teams_registered }}</div>
+                    <div class="stat-label">Teams Registered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_capacity }}</div>
+                    <div class="stat-label">Total Capacity</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ FLASH MESSAGES ═══════ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container" style="padding-top: 20px;">
+        {% for category, message in messages %}
+        <div class="flash-message flash-{{ category }}">
+            <span>{{ '⚠️' if category == 'error' else '✅' }} {{ message }}</span>
+            <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- ═══════ TABLE SECTION ═══════ -->
+    <section class="table-section">
+        <div class="container container-fluid">
+            <div class="table-card" style="opacity: 1; transform: translateY(0);">
+                <div class="table-header">
+                    <div class="table-header-left">
+                        <h3 class="table-title">Problem Statements</h3>
+                    </div>
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Search problems or domains..."
+                            class="search-input">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table" id="topicsTable">
+                        <thead>
+                            <tr>
+                                <th class="th-sno">Sr No</th>
+                                <th>Project ID</th>
+                                <th>Problem Statement</th>
+                                <th>Objective</th>
+                                <th>Domain</th>
+                                <th>Max Team Size</th>
+                                <th>Members Per Team</th>
+                                <th class="th-action">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in problems %}
+                            <tr class="{% if p.count >= p.max_team_size %}row-full{% endif %}">
+                                <td class="td-sno">{{ p.sr }}</td>
+                                <td><strong>{{ p.id }}</strong></td>
+                                <td
+                                    style="font-weight: 700; color: var(--primary); font-size: 1.25rem; line-height: 1.5;">
+                                    {{ p.title }}</td>
+                                <td>
+                                    <div class="objective-text">{{ p.objective }}</div>
+                                </td>
+                                <td>
+                                    <span class="category-badge"
+                                        style="background:var(--accent-glow);color:var(--accent-dark);border:1px solid rgba(255,106,0,0.3)">
+                                        {{ p.domain }}
+                                    </span>
+                                </td>
+                                <td style="text-align:center;">{{ p.max_team_size }}</td>
+                                <td style="text-align:center;">{{ p.members }}</td>
+                                <td class="td-action">
+                                    <div class="action-flex">
+                                        <div class="slots-info">Slots: {{ p.max_team_size -
+                                            p.count }}</div>
+                                        {% if p.count >= p.max_team_size %}
+                                        <button class="btn btn-full" disabled>
+                                            <span class="btn-icon">🚫</span> Full
+                                        </button>
+                                        {% else %}
+                                        <a href="{{ url_for('register', ps_id=p.id) }}" class="btn btn-register">
+                                            <span class="btn-icon">📝</span> Register
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-footer">
+                    <p class="showing-info" id="showingInfo">Showing {{ problems | length }} entries</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ FOOTER ═══════ -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 AVISHKAR 2k26 Registration Portal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ═══════ JAVASCRIPT ═══════ -->
+    <script>
+        // Live Search Filter
+        const searchInput = document.getElementById('searchInput');
+        const table = document.getElementById('topicsTable');
+        const tbody = table.querySelector('tbody');
+        const rows = tbody.querySelectorAll('tr');
+        const showingInfo = document.getElementById('showingInfo');
+
+        function filterTable() {
+            const query = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+
+                if (text.includes(query)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            showingInfo.textContent = `Showing ${visibleCount} of ${rows.length} entries`;
+        }
+
+        searchInput.addEventListener('input', filterTable);
+    </script>
+
+</body>
+
+</html>

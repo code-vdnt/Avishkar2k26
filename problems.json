@@ -1,0 +1,552 @@
+[
+    {
+        "sr": 1,
+        "id": "PS-001",
+        "title": "Digital Land Records Tamper-Proof System",
+        "objective": "Build a blockchain-based platform to store, verify, and transfer land ownership records, eliminating fraudulent mutations and reducing litigation.",
+        "domain": "Computer Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 2,
+        "id": "PS-002",
+        "title": "Enhancing Spectral Analysis of Water Bodies through Efficient Machine Learning Techniques.",
+        "objective": "To develop an efficient spectral and machine learning\u2013based framework for analyzing the impact of urbanization on water bodies by studying land-use changes, estimating water quality parameters (chlorophyll, turbidity, DOM), analyzing temporal variations using multispectral satellite data, improving atmospheric and cloud correction techniques, and designing an optimized loss function to enhance detection accuracy while minimizing false positives.",
+        "domain": "Computer Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 3,
+        "id": "PS-003",
+        "title": "Government Tender Fraud Detection System",
+        "objective": "Create a rule-based and ML system to detect bid-rigging and collusion in government e-procurement portals like GeM.",
+        "domain": "Computer Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 4,
+        "id": "PS-004",
+        "title": "Unified Civil Service Exam Platform",
+        "objective": "Design a secure, scalable online exam system for UPSC/MPSC with proctoring, live monitoring, and result analytics for millions of candidates.",
+        "domain": "Computer Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 5,
+        "id": "PS-005",
+        "title": "Offline-First Digital Ration Management",
+        "objective": "Build a ration card management system that works offline in rural areas, syncs on connectivity, and prevents ghost beneficiaries in PDS.",
+        "domain": "Computer Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 6,
+        "id": "PS-006",
+        "title": "Smart Court Case Management System",
+        "objective": "Develop a digital system for judiciary to track case progress, auto-schedule hearings, alert lawyers, and generate dashboards on pendency.",
+        "domain": "Computer Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 7,
+        "id": "PS-007",
+        "title": "Pollution Source Tracking Web Platform",
+        "objective": "Create a geo-tagged analytics platform aggregating industrial, vehicular, and construction pollution data from multiple sensors and reports.",
+        "domain": "Computer Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 8,
+        "id": "PS-008",
+        "title": "Village-Level Digital Service Kiosk Software",
+        "objective": "Design multilingual kiosk software (CSC) enabling villagers to apply for certificates, pensions, and schemes without middlemen.",
+        "domain": "Information Technology",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 9,
+        "id": "PS-009",
+        "title": "Integrated Hospital Queue & Bed Management",
+        "objective": "Build a real-time system for government hospitals to manage OPD queues, bed occupancy, doctor availability, and medicine stock across districts.",
+        "domain": "Information Technology",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 10,
+        "id": "PS-010",
+        "title": "Scholarship Disbursement Tracking Portal",
+        "objective": "Create an end-to-end portal to track scholarship applications, verification, disbursement, and utilization for SC/ST/OBC students with audit trails.",
+        "domain": "Information Technology",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 11,
+        "id": "PS-011",
+        "title": "Smart Water Meter & Bill Management",
+        "objective": "Develop an IoT-integrated IT platform for municipal water supply: read meters remotely, generate bills, detect leakages, and flag non-payment.",
+        "domain": "Information Technology",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 12,
+        "id": "PS-012",
+        "title": "E-Lokshahi Document Authenticity Checker",
+        "objective": "Build a QR/OTP-based document verification system for government-issued certificates to prevent forged marksheets, caste, and income certificates.",
+        "domain": "Information Technology",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 13,
+        "id": "PS-013",
+        "title": "Rural Teacher Attendance & Quality Dashboard",
+        "objective": "Develop a mobile and web platform where government school teachers mark geotagged attendance and principals monitor teaching quality with outcome data.",
+        "domain": "Information Technology",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 14,
+        "id": "PS-014",
+        "title": "Integrated Panchayat Fund Audit Tool",
+        "objective": "Create a transparent fund utilization tracker for Gram Panchayats under MGNREGS, 14th Finance Commission, and local grants with public dashboards.",
+        "domain": "Information Technology",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 15,
+        "id": "PS-015",
+        "title": "Crop Disease Detection via Satellite Imagery",
+        "objective": "Train ML models on Sentinel/Landsat satellite data to detect crop disease outbreaks at district level and alert agriculture departments early.",
+        "domain": "AI & Machine Learning",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 16,
+        "id": "PS-016",
+        "title": "Intelligent Navigation System for Autonomous Drones using Adaptive Machine Learning",
+        "objective": "Make real-time navigation decisions in dynamic environments. The system will be designed and tested in a simulation environment to enable adaptive path planning, obstacle avoidance, and environment-aware decision making, improving the efficiency, safety, and reliability of autonomous drone navigation.",
+        "domain": "AI & Machine Learning",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 17,
+        "id": "PS-017",
+        "title": "Predictive Road Accident Hotspot Mapping",
+        "objective": "Use historical accident data, weather feeds, and road geometry to train ML models predicting accident-prone stretches for preventive intervention.",
+        "domain": "AI & Machine Learning",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 18,
+        "id": "PS-018",
+        "title": "ML-Based Welfare Scheme Eligibility Predictor",
+        "objective": "Develop a model using Aadhaar-linked socio-economic data to proactively identify eligible citizens for PM Awas, Ujjwala, and similar schemes.",
+        "domain": "AI & Machine Learning",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 19,
+        "id": "PS-019",
+        "title": "Smart CCTV Analytics for Traffic Violations",
+        "objective": "Build edge AI on city CCTVs to auto-detect signal jumping, wrong-side driving, and helmetless riding; generate challans automatically.",
+        "domain": "AI & Machine Learning",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 20,
+        "id": "PS-020",
+        "title": "AI-Powered Document Digitization for Archives",
+        "objective": "Develop an OCR and NLP pipeline to digitize government archives (historical land records, birth/death registers) and make them fully searchable.",
+        "domain": "AI & Machine Learning",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 21,
+        "id": "PS-021",
+        "title": "Fake News Detection in Regional Languages",
+        "objective": "Build an NLP classifier detecting misinformation about government policies in regional languages across social media platforms.",
+        "domain": "AI & Machine Learning",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 22,
+        "id": "PS-022",
+        "title": "District-Level Disease Surveillance Dashboard",
+        "objective": "Design a real-time epidemiological dashboard aggregating health facility data to detect outbreak patterns and guide district health officers.",
+        "domain": "AI & Data Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 23,
+        "id": "PS-023",
+        "title": "MGNREGS Worker Payment Analytics",
+        "objective": "Create a data pipeline to detect payment delays, muster roll anomalies, and wage inconsistencies in MGNREGS worker data.",
+        "domain": "AI & Data Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 24,
+        "id": "PS-024",
+        "title": "Urban Flood Prediction and Preparedness Tool",
+        "objective": "Build a predictive analytics model using IMD rainfall data, city drainage maps, and historical flood records to issue early warning alerts.",
+        "domain": "AI & Data Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 25,
+        "id": "PS-025",
+        "title": "Budget Expenditure Transparency Engine",
+        "objective": "Develop a visual analytics engine for Union/State budget data showing department-wise expenditure trends, outcome mapping, and variance analysis.",
+        "domain": "AI & Data Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 26,
+        "id": "PS-026",
+        "title": "Smart Beneficiary Deduplication System",
+        "objective": "Use data science on Aadhaar, ration card, and pension databases to identify duplicate or ghost beneficiaries across welfare schemes.",
+        "domain": "AI & Data Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 27,
+        "id": "PS-027",
+        "title": "Police Crime Pattern Analytics Platform",
+        "objective": "Build a crime data analytics solution for state police to identify hotspots, seasonal patterns, and resource deployment optimization.",
+        "domain": "AI & Data Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 28,
+        "id": "PS-028",
+        "title": "Municipal Solid Waste Route Optimization",
+        "objective": "Apply data science on GPS data, waste generation rates, and vehicle capacity to optimize garbage collection routes for smart cities.",
+        "domain": "AI & Data Science",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 29,
+        "id": "PS-029",
+        "title": "Smart Streetlight Grid Control System",
+        "objective": "Design an electronics solution with dimming control, fault reporting, and energy metering for government smart streetlights across municipalities.",
+        "domain": "Electronics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 30,
+        "id": "PS-030",
+        "title": "Tamper-Proof Electronic Voting Unit",
+        "objective": "Develop an enhanced EVM prototype with biometric voter verification, paper trail, and real-time result upload under secure hardware design.",
+        "domain": "Electronics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 31,
+        "id": "PS-031",
+        "title": "Soil Health Card Electronic Sensor Kit",
+        "objective": "Build a portable, low-cost soil testing device for Krishi Vigyan Kendras to measure NPK, pH, and moisture on-site for farmers.",
+        "domain": "Electronics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 32,
+        "id": "PS-032",
+        "title": "Smart Electricity Meter for Rural Feeders",
+        "objective": "Design a smart meter node for rural electricity feeders with load monitoring, theft detection, and remote disconnect capability.",
+        "domain": "Electronics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 33,
+        "id": "PS-033",
+        "title": "Wearable Distress Alert for Forest Guards",
+        "objective": "Create a wearable device for forest department staff to send SOS with GPS location in no-network zones using LPWAN or satellite.",
+        "domain": "Electronics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 34,
+        "id": "PS-034",
+        "title": "Manual Scavenger-Free Sewer Cleaning Machine",
+        "objective": "Design a low-cost mechanical sewer cleaning robot for municipalities to eliminate hazardous manual entry in sewers per Supreme Court directives.",
+        "domain": "Mechanical Engineering",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 35,
+        "id": "PS-035",
+        "title": "Low-Cost Prosthetic Limb for Accident Victims",
+        "objective": "Develop a functional, affordable prosthetic limb for government ESIC hospitals using locally available materials and simple mechanical joints.",
+        "domain": "Mechanical Engineering",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 36,
+        "id": "PS-036",
+        "title": "Portable Pothole Detection & Repair Unit",
+        "objective": "Build a tow-behind mechanical unit for NHAI/PWD field teams that detects, marks, and pre-fills road potholes in a single pass.",
+        "domain": "Mechanical Engineering",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 37,
+        "id": "PS-037",
+        "title": "Solar Pump Irrigation Automation System",
+        "objective": "Design a mechanical-electronic system for PM-KUSUM solar pumps to automate ON/OFF based on soil moisture, reducing water wastage on farms.",
+        "domain": "Mechanical Engineering",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 38,
+        "id": "PS-038",
+        "title": "Flood Relief Emergency Bridge Kit",
+        "objective": "Design a rapidly deployable modular bridge system for NDRF teams that can be assembled without machinery in 30 minutes over a 10-metre span.",
+        "domain": "Mechanical Engineering",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 39,
+        "id": "PS-039",
+        "title": "Municipal Waste Segregation Machine",
+        "objective": "Build a mechanical system for ULBs to auto-segregate dry/wet municipal solid waste at source using vibration, density, and size differentiation.",
+        "domain": "Mechanical Engineering",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 40,
+        "id": "PS-040",
+        "title": "Pipeline Inspection Robot for Water Supply",
+        "objective": "Build an autonomous robot to inspect water supply pipelines for corrosion, cracks, and blockages, sending real-time video to Jal Jeevan Mission teams.",
+        "domain": "Robotics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 41,
+        "id": "PS-041",
+        "title": "Mine Rescue Autonomous Robot",
+        "objective": "Develop a remote-controlled robot for DGMS-approved mine rescue operations capable of carrying oxygen, sensing gas, and navigating debris.",
+        "domain": "Robotics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 42,
+        "id": "PS-042",
+        "title": "Automated Border Fence Surveillance Bot",
+        "objective": "Create a ground robot for BSF/CRPF border patrol that follows a predefined track, detects intrusions via thermal imaging, and sends live alerts.",
+        "domain": "Robotics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 43,
+        "id": "PS-043",
+        "title": "Agricultural Drone for Pesticide Spraying",
+        "objective": "Build a low-cost agricultural drone for state agriculture departments enabling precision pesticide application on small and fragmented farm plots.",
+        "domain": "Robotics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 44,
+        "id": "PS-044",
+        "title": "Hospital Disinfection Robot for PHCs",
+        "objective": "Develop a UV-C disinfection robot for government Primary Health Centres to autonomously disinfect wards between patient shifts.",
+        "domain": "Robotics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 45,
+        "id": "PS-045",
+        "title": "Explosive Ordnance Disposal (EOD) Robot",
+        "objective": "Design a remotely operated robot for police bomb squads to inspect, handle, and neutralize IEDs in public spaces without human exposure.",
+        "domain": "Robotics",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 46,
+        "id": "PS-046",
+        "title": "Rural Last-Mile Broadband via TV White Space",
+        "objective": "Design a TVWS-based broadband connectivity solution for BharatNet to serve villages beyond fiber and licensed spectrum reach.",
+        "domain": "Electronics & Telecommunication",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 47,
+        "id": "PS-047",
+        "title": "Disaster-Resilient Emergency Communication Network",
+        "objective": "Build a mesh radio communication network for SDRF teams that functions without cellular infrastructure during flood/earthquake scenarios.",
+        "domain": "Electronics & Telecommunication",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 48,
+        "id": "PS-048",
+        "title": "Smart Spectrum Monitoring for DoT",
+        "objective": "Create an automated spectrum monitoring device for DoT field offices to detect unauthorized frequency transmissions in real time.",
+        "domain": "Electronics & Telecommunication",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 49,
+        "id": "PS-049",
+        "title": "Remote Health Monitoring via Telemedicine Hub",
+        "objective": "Develop a compact device for ASHA workers to collect and transmit patient vitals (BP, SPO2, ECG) from remote villages to district hospitals.",
+        "domain": "Electronics & Telecommunication",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 50,
+        "id": "PS-050",
+        "title": "Smart Traffic Signal Control via V2I Communication",
+        "objective": "Design a vehicle-to-infrastructure communication prototype for smart city signals to prioritize ambulances and government emergency vehicles.",
+        "domain": "Electronics & Telecommunication",
+        "max_team_size": 10,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 51,
+        "id": "PS-051",
+        "title": "Smart Structural Health Monitoring System",
+        "objective": "Develop an IoT-based sensor network for government bridges and flyovers to monitor vibration, strain, and deflection in real time, alerting PWD engineers to structural anomalies before failure.",
+        "domain": "Civil Engineering",
+        "max_team_size": 20,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 52,
+        "id": "PS-052",
+        "title": "AI-Based Road Quality Assessment Tool",
+        "objective": "Build a mobile application using computer vision and accelerometer data to automatically detect and classify road surface defects (potholes, cracks, rutting) for NHAI/PWD maintenance prioritization.",
+        "domain": "Civil Engineering",
+        "max_team_size": 20,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 53,
+        "id": "PS-053",
+        "title": "Construction Waste Recycling & Reuse Platform",
+        "objective": "Design a digital tracking and marketplace platform for construction and demolition (C&D) waste under MOHUA’s C&D waste management rules, enabling contractors to quantify, segregate, and trade recyclable materials.",
+        "domain": "Civil Engineering",
+        "max_team_size": 20,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 54,
+        "id": "PS-054",
+        "title": "Groundwater Level Monitoring & Recharge Dashboard",
+        "objective": "Develop an IoT-linked platform integrating data from CGWB piezometers, rainfall gauges, and recharge structures to track aquifer levels district-wise and recommend artificial recharge interventions under Jal Shakti Abhiyan.",
+        "domain": "Civil Engineering",
+        "max_team_size": 20,
+        "members": 4,
+        "count": 0
+    },
+    {
+        "sr": 55,
+        "id": "PS-055",
+        "title": "Digital Twin for Urban Infrastructure Planning",
+        "objective": "Create a GIS-integrated digital twin model for smart city authorities to simulate the impact of new construction projects on existing drainage, traffic, and utility networks before physical approvals are granted.",
+        "domain": "Civil Engineering",
+        "max_team_size": 20,
+        "members": 4,
+        "count": 0
+    }
+]

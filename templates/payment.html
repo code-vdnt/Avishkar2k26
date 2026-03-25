@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVISHKAR 2k26 | Payment Instructions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .payment-card {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            text-align: center;
+        }
+        .qr-code {
+            width: 250px;
+            height: 250px;
+            margin: 20px auto;
+            border: 5px solid var(--accent-glow);
+            border-radius: var(--radius-md);
+            padding: 10px;
+        }
+        .upi-id {
+            background: var(--gray-100);
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            color: var(--primary);
+            margin: 15px 0;
+            display: inline-block;
+        }
+        .guide-list {
+            text-align: left;
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+        .guide-list li {
+            margin-bottom: 10px;
+            color: var(--gray-700);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-icon">⚡</div>
+                <div>
+                    <h1 class="nav-title">AVISHKAR 2k26 Portal</h1>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="payment-card">
+            <div class="hero-badge">Step 2: Payment</div>
+            <h2 class="hero-title" style="color: var(--primary); margin-bottom: 15px;">Complete Your Registration</h2>
+            <p style="color: var(--gray-600);">Team: <strong>{{ team }}</strong> (Leader: {{ leader }})</p>
+            
+            <div class="qr-code">
+                <img src="{{ url_for('static', filename='qr_code.png') }}" alt="UPI QR Code" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            
+            <div class="upi-id">UPI ID: avishkar2k26@upi</div>
+            
+            <div class="guide-list">
+                <h4 style="color: var(--primary); margin-bottom: 10px;">Payment Instructions:</h4>
+                <ul>
+                    <li>Scan the QR code or use the UPI ID to pay the registration fee.</li>
+                    <li>Ensure the transaction is successful before moving forward.</li>
+                    <li><strong>IMPORTANT:</strong> Take a clear screenshot of the payment confirmation screen and note down the **UTR (Transaction ID)**.</li>
+                    <li>Your registration is only valid after manual verification of your payment.</li>
+                </ul>
+            </div>
+            
+            <a href="{{ url_for('confirm_payment', team=team, leader=leader, contact=contact) }}" class="btn btn-register" style="width: 100%; display: block; text-align: center; text-decoration: none;">
+                I HAVE PAID - SUBMIT PROOF ➔
+            </a>
+            
+            <p style="margin-top: 15px; font-size: 0.9rem; color: var(--gray-500);">Registration Fee: ₹500 per team</p>
+        </div>
+    </div>
+</body>
+</html>

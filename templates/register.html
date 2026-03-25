@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Register your team for {{ problem.id }} - AVISHKAR 2k26">
+    <title>Register | {{ problem.id }} | AVISHKAR 2k26</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .form-topic-badge {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+        }
+
+        .form-topic-badge .badge-label {
+            font-weight: 600;
+            color: var(--gray-600);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .form-topic-badge .badge-value {
+            font-size: 1.4rem;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .form-topic-objective {
+            font-size: 1.2rem;
+            color: var(--gray-600);
+            margin-top: 12px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════ NAVBAR ═══════ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-icon">⚡</div>
+                <div>
+                    <h1 class="nav-title">AVISHKAR 2k26 Portal</h1>
+                    <p class="nav-subtitle">Innovation • Technology • Impact</p>
+                </div>
+            </div>
+            <!-- Nav links removed -->
+        </div>
+    </nav>
+
+    <!-- ═══════ REGISTRATION FORM ═══════ -->
+    <section class="form-section">
+        <div class="container container-fluid">
+            <div class="form-card">
+                <div class="form-header">
+                    <a href="{{ url_for('index') }}" class="back-link">← Back to Problem Statements</a>
+                    <h2 class="form-title">Team Registration</h2>
+
+                    <div class="form-topic-badge">
+                        <span class="badge-label">Selected Problem Statement:</span>
+                        <span class="badge-value">{{ problem.id }} - {{ problem.title }}</span>
+                        <div class="form-topic-objective">{{ problem.objective }}</div>
+                    </div>
+
+                    <div class="slots-remaining-badge"
+                        style="display:block; margin: 0 auto 20px auto; width: fit-content; background:rgba(255,106,0,0.1); color:var(--accent-dark); padding:10px 24px; border-radius:50px; font-weight:700; font-size:1.25rem;">
+                        <span class="slots-icon" style="font-size: 1.35rem;">🎯</span>
+                        <span>{{ remaining }} slots remaining</span>
+                    </div>
+                </div>
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    <span>{{ '⚠️' if category == 'error' else '✅' }} {{ message }}</span>
+                    <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('submit_registration') }}" method="POST" id="registerForm">
+                    <input type="hidden" name="topic" value="{{ problem.id }}">
+
+                    <!-- Team Info -->
+                    <div class="form-group-title">
+                        <span class="group-icon">👥</span> Team Information
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="team_name" class="form-label" style="font-size: 1rem;">Team Name <span
+                                    class="required" style="color:var(--error)">*</span></label>
+                            <input type="text" id="team_name" name="team_name" class="form-input"
+                                style="font-size: 1.05rem; padding: 14px 18px;" placeholder="Enter your team name"
+                                required>
+                        </div>
+                    </div>
+
+                    <!-- Leader Info -->
+                    <div class="form-group-title" style="font-size: 1.15rem; margin-top: 20px;">
+                        <span class="group-icon">👤</span> Team Leader Details
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="leader_name" class="form-label" style="font-size: 1rem;">Leader Name <span
+                                    class="required" style="color:var(--error)">*</span></label>
+                            <input type="text" id="leader_name" name="leader_name" class="form-input"
+                                style="font-size: 1.05rem;" placeholder="Full name of team leader" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="college" class="form-label" style="font-size: 1rem;">College Name <span
+                                    class="required" style="color:var(--error)">*</span></label>
+                            <input type="text" id="college" name="college" class="form-input"
+                                style="font-size: 1.05rem;" placeholder="Leader's college name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email" class="form-label" style="font-size: 1rem;">Email <span class="required"
+                                    style="color:var(--error)">*</span></label>
+                            <input type="email" id="email" name="email" class="form-input" style="font-size: 1.05rem;"
+                                placeholder="leader@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="form-label" style="font-size: 1rem;">Phone Number <span
+                                    class="required" style="color:var(--error)">*</span></label>
+                            <input type="tel" id="phone" name="phone" class="form-input" style="font-size: 1.05rem;"
+                                placeholder="10-digit phone number" pattern="[0-9]{10}" required>
+                        </div>
+                    </div>
+
+                    <!-- Members -->
+                    <div class="form-group-title" style="font-size: 1.15rem; margin-top: 20px;">
+                        <span class="group-icon">🤝</span> Additional Team Members
+                    </div>
+
+                    <!-- Member 2 -->
+                    <div
+                        style="background: rgba(0,0,0,0.02); border: 1px solid var(--gray-200); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 12px; color: var(--primary); font-size: 1.1rem;">Team Member 2</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="member2_name" class="form-label" style="font-size: 1rem;">Name <span
+                                        class="required" style="color:var(--error)">*</span></label>
+                                <input type="text" id="member2_name" name="member2_name" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="Full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="member2_college" class="form-label" style="font-size: 1rem;">College Name
+                                    <span class="required" style="color:var(--error)">*</span></label>
+                                <input type="text" id="member2_college" name="member2_college" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="College name" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="member2_email" class="form-label" style="font-size: 1rem;">Email <span
+                                        class="required" style="color:var(--error)">*</span></label>
+                                <input type="email" id="member2_email" name="member2_email" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="Email address" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="member2_phone" class="form-label" style="font-size: 1rem;">Phone Number
+                                    <span class="required" style="color:var(--error)">*</span></label>
+                                <input type="tel" id="member2_phone" name="member2_phone" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="10-digit phone number" pattern="[0-9]{10}"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member 3 -->
+                    <div
+                        style="background: rgba(0,0,0,0.02); border: 1px solid var(--gray-200); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 12px; color: var(--primary); font-size: 1.1rem;">Team Member 3</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="member3_name" class="form-label" style="font-size: 1rem;">Name <span
+                                        class="required" style="color:var(--error)">*</span></label>
+                                <input type="text" id="member3_name" name="member3_name" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="Full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="member3_college" class="form-label" style="font-size: 1rem;">College Name
+                                    <span class="required" style="color:var(--error)">*</span></label>
+                                <input type="text" id="member3_college" name="member3_college" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="College name" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="member3_email" class="form-label" style="font-size: 1rem;">Email <span
+                                        class="required" style="color:var(--error)">*</span></label>
+                                <input type="email" id="member3_email" name="member3_email" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="Email address" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="member3_phone" class="form-label" style="font-size: 1rem;">Phone Number
+                                    <span class="required" style="color:var(--error)">*</span></label>
+                                <input type="tel" id="member3_phone" name="member3_phone" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="10-digit phone number" pattern="[0-9]{10}"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member 4 -->
+                    <div
+                        style="background: rgba(0,0,0,0.02); border: 1px solid var(--gray-200); padding: 20px; border-radius: 8px;">
+                        <h4 style="margin-bottom: 12px; color: var(--primary); font-size: 1.1rem;">Team Member 4</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="member4_name" class="form-label" style="font-size: 1rem;">Name <span
+                                        class="required" style="color:var(--error)">*</span></label>
+                                <input type="text" id="member4_name" name="member4_name" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="Full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="member4_college" class="form-label" style="font-size: 1rem;">College Name
+                                    <span class="required" style="color:var(--error)">*</span></label>
+                                <input type="text" id="member4_college" name="member4_college" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="College name" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="member4_email" class="form-label" style="font-size: 1rem;">Email <span
+                                        class="required" style="color:var(--error)">*</span></label>
+                                <input type="email" id="member4_email" name="member4_email" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="Email address" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="member4_phone" class="form-label" style="font-size: 1rem;">Phone Number
+                                    <span class="required" style="color:var(--error)">*</span></label>
+                                <input type="tel" id="member4_phone" name="member4_phone" class="form-input"
+                                    style="font-size: 1.05rem;" placeholder="10-digit phone number" pattern="[0-9]{10}"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <button type="button" class="btn btn-submit btn-register" id="previewBtn"
+                            style="padding: 12px 24px; font-size: 1rem; width: 100%;">
+                            <span class="btn-icon">👁️</span> Review Registration Details
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ FOOTER ═══════ -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 AVISHKAR 2k26 Registration Portal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ═══════ PREVIEW MODAL ═══════ -->
+    <div id="previewModal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px;">
+        <div
+            style="background: white; border-radius: var(--radius-lg); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <h3
+                style="margin-bottom: 20px; color: var(--primary); border-bottom: 2px solid var(--gray-200); padding-bottom: 10px;">
+                📋 Review Registration Details</h3>
+
+            <div id="previewContent"
+                style="margin-bottom: 24px; font-size: 0.95rem; line-height: 1.6; text-align: left;">
+                <!-- Filled dynamically -->
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" id="closeModalBtn" class="btn"
+                    style="background: var(--gray-200); color: var(--gray-800); padding: 10px 20px; text-decoration: none;">✏️
+                    Go Back to Edit</button>
+                <button type="button" id="actualSubmitBtn" class="btn btn-primary" style="padding: 10px 20px;">✅ Confirm
+                    & Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ FORM VALIDATION & PREVIEW ═══════ -->
+    <script>
+        const form = document.querySelector('form');
+        const previewBtn = document.getElementById('previewBtn');
+        const modal = document.getElementById('previewModal');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const actualSubmitBtn = document.getElementById('actualSubmitBtn');
+        const previewContent = document.getElementById('previewContent');
+
+        previewBtn.addEventListener('click', async function (e) {
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Gather elements for the API payload
+            const originalText = previewBtn.innerHTML;
+            previewBtn.innerHTML = '<span class="btn-icon">⏳</span> Checking details...';
+            previewBtn.disabled = true;
+
+            const payload = {
+                topic: "{{ problem.id }}",
+                team_name: document.getElementById('team_name').value,
+                emails: [
+                    document.getElementById('email').value,
+                    document.getElementById('member2_email').value,
+                    document.getElementById('member3_email').value,
+                    document.getElementById('member4_email').value
+                ],
+                phones: [
+                    document.getElementById('phone').value,
+                    document.getElementById('member2_phone').value,
+                    document.getElementById('member3_phone').value,
+                    document.getElementById('member4_phone').value
+                ]
+            };
+
+            try {
+                // Instantly hit the Python logic before rendering the review step
+                const response = await fetch("{{ url_for('check_duplicates') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                
+                if (result.duplicate) {
+                    alert('Registration Blocked: \n\n' + result.message);
+                    previewBtn.innerHTML = originalText;
+                    previewBtn.disabled = false;
+                    return; // Stop the modal from opening
+                }
+            } catch(err) {
+                console.error("Duplicate API failed:", err);
+            }
+
+            previewBtn.innerHTML = originalText;
+            previewBtn.disabled = false;
+
+            let html = `<div style="margin-bottom:15px; font-size:1.1rem;"><strong>Team Name:</strong> <span style="color:var(--primary); font-weight: 700;">${document.getElementById('team_name').value}</span></div>`;
+
+            html += `<div style="margin-top:20px; background: rgba(0,0,0,0.02); padding: 15px; border-radius: 8px; border: 1px solid var(--gray-200);">
+            <h4 style="margin-bottom: 10px; color:var(--primary);">👤 Team Leader</h4>
+            <div>📝 <strong>Name:</strong> ${document.getElementById('leader_name').value}</div>
+            <div>🎓 <strong>College:</strong> ${document.getElementById('college').value}</div>
+            <div>📧 <strong>Email:</strong> ${document.getElementById('email').value}</div>
+            <div>📞 <strong>Phone:</strong> ${document.getElementById('phone').value}</div>
+            </div>`;
+
+            ['2', '3', '4'].forEach(num => {
+                const mName = document.getElementById('member' + num + '_name').value;
+                if (mName) {
+                    html += `<div style="margin-top:15px; background: rgba(0,0,0,0.02); padding: 15px; border-radius: 8px; border: 1px solid var(--gray-200);">
+                    <h4 style="margin-bottom: 10px; color:var(--primary);">🤝 Member ${num}</h4>
+                    <div>📝 <strong>Name:</strong> ${mName}</div>
+                    <div>🎓 <strong>College:</strong> ${document.getElementById('member' + num + '_college').value}</div>
+                    <div>📧 <strong>Email:</strong> ${document.getElementById('member' + num + '_email').value}</div>
+                    <div>📞 <strong>Phone:</strong> ${document.getElementById('member' + num + '_phone').value}</div>
+                    </div>`;
+                }
+            });
+
+            previewContent.innerHTML = html;
+            modal.style.display = 'flex';
+        });
+
+        closeBtn.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+        actualSubmitBtn.addEventListener('click', function () {
+            actualSubmitBtn.disabled = true;
+            actualSubmitBtn.innerHTML = '<span class="btn-icon">⏳</span> Submitting...';
+            form.submit();
+        });
+
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('input', () => {
+                input.style.borderColor = '';
+            });
+        });
+    </script>
+</body>
+
+</html>

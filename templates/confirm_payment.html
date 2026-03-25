@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVISHKAR 2k26 | Confirm Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .confirmation-card {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            text-align: center;
+        }
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+        }
+        .file-upload {
+            padding: 20px;
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-upload:hover {
+            border-color: var(--accent-dark);
+            background: var(--gray-50);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-icon">⚡</div>
+                <div>
+                    <h1 class="nav-title">AVISHKAR 2k26 Portal</h1>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="confirmation-card">
+            <div class="hero-badge">Step 3: Verification</div>
+            <h2 class="hero-title" style="color: var(--primary); margin-bottom: 15px;">Submit Payment Proof</h2>
+            <p style="color: var(--gray-600); margin-bottom: 30px;">Team: <strong>{{ team }}</strong></p>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}" style="text-align: left; margin-bottom: 20px;">
+                            <span>{{ '⚠️' if category == 'error' else '✅' }} {{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('submit_payment') }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="name" value="{{ team }}">
+                <input type="hidden" name="contact" value="{{ contact }}">
+                
+                <div class="form-group">
+                    <label class="form-label">UTR (Transaction ID) *</label>
+                    <input type="text" name="utr" class="form-control" placeholder="12-digit UPI Transaction ID" maxlength="20" required pattern="[0-9]{10,20}">
+                    <small style="color: var(--gray-500);">Double check your UTR. It is crucial for verification.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Screenshot of Payment *</label>
+                    <div class="file-upload" onclick="document.getElementById('screenshot').click()">
+                        <div id="upload-status">
+                            <span style="font-size: 2rem;">📸</span><br>
+                            Click to upload payment screenshot
+                        </div>
+                        <input type="file" id="screenshot" name="screenshot" accept="image/*" style="display: none;" required onchange="updateFileName(this)">
+                    </div>
+                    <small style="color: var(--gray-500);">Accepted: JPG, JPEG, PNG, GIF</small>
+                </div>
+                
+                <button type="submit" class="btn btn-register" style="width: 100%; display: block;">
+                    SUBMIT FOR VERIFICATION ➔
+                </button>
+                
+                <div style="margin-top: 20px; color: var(--gray-500); font-size: 0.85rem; border-top: 1px solid var(--gray-100); padding-top: 15px;">
+                    Once submitted, our team will verify your transaction manually. You will receive a confirmation once your registration is approved.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function updateFileName(input) {
+            const status = document.getElementById('upload-status');
+            if (input.files && input.files[0]) {
+                status.innerHTML = `<span style="font-size: 2rem; color: green;">✅</span><br>Selected: ${input.files[0].name}`;
+            }
+        }
+    </script>
+</body>
+</html>

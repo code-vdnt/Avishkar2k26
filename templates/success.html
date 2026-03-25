@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful | AVISHKAR 2k26</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- ═══════ NAVBAR ═══════ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-icon">⚡</div>
+                <div>
+                    <h1 class="nav-title">AVISHKAR 2k26 Portal</h1>
+                    <p class="nav-subtitle">Innovation • Technology • Impact</p>
+                </div>
+            </div>
+            <!-- Nav links removed -->
+        </div>
+    </nav>
+
+    <!-- ═══════ SUCCESS CONTENT ═══════ -->
+    <section class="success-section" style="padding: 80px 24px; text-align: center;">
+        <div class="success-card" style="max-width: 600px; margin: 0 auto; background: var(--white); padding: 40px; border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);">
+            <div class="success-icon-wrapper" style="font-size: 4rem; margin-bottom: 20px;">
+                <div class="success-icon">✅</div>
+            </div>
+            <h2 class="success-title" style="color: var(--primary); margin-bottom: 16px;">Proof Submitted Successfully!</h2>
+            <p class="success-message" style="color: var(--gray-600); font-size: 1.1rem; margin-bottom: 24px;">
+                Thank you, team <strong>"{{ team }}"</strong>. Your payment proof has been received.
+            </p>
+            
+            {% set utr = request.args.get('utr') %}
+            {% if utr %}
+            <div class="success-topic" style="background: #fff3cd; padding: 12px; border-radius: var(--radius-sm); border: 1px solid #ffeeba; display: inline-block; margin-bottom: 24px;">
+                <span class="topic-label" style="font-weight: 600; color: #856404;">UTR (Transaction ID):</span>
+                <span class="topic-value" style="color: #856404; font-weight: 700;">{{ utr }}</span>
+            </div>
+            {% endif %}
+
+            <div class="success-note" style="color: var(--gray-600); font-size: 1rem; margin-bottom: 30px; line-height: 1.6;">
+                <p><strong>Verification Status: <span style="color: var(--accent);">PENDING</span></strong></p>
+                <p>Our administrators are currently reviewing your payment proof. This usually takes 1-2 hours. Once verified, your slot will be officially confirmed in our database.</p>
+            </div>
+            <div class="success-actions">
+                <a href="{{ url_for('index') }}" class="btn btn-primary" style="padding: 12px 24px;">
+                    <span class="btn-icon">🏠</span> Back to Home
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ FOOTER ═══════ -->
+    <footer class="footer" style="position: absolute; bottom: 0; width: 100%;">
+        <div class="container" style="text-align: center; padding: 20px; color: var(--gray-500);">
+            <p>© 2026 AVISHKAR 2k26 Registration Portal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ═══════ CONFETTI ═══════ -->
+    <script>
+        function createConfetti() {
+            const colors = ['#FF6A00', '#0A2540', '#4ECDC4'];
+            const container = document.body;
+
+            for (let i = 0; i < 40; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.zIndex = '9999';
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                const duration = Math.random() * 2 + 3;
+                confetti.animate([
+                    { transform: `translate3d(0, 0, 0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translate3d(${Math.random() * 100 - 50}px, 100vh, 0) rotate(720deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'linear',
+                    delay: Math.random() * 2000
+                });
+
+                container.appendChild(confetti);
+                setTimeout(() => confetti.remove(), duration * 1000 + 2000);
+            }
+        }
+        createConfetti();
+    </script>
+</body>
+</html>

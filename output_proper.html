@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVISHKAR Admin - Payments</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A2540;
+            --accent: #FF6A00;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f6;
+        }
+        .admin-sidebar {
+            background: var(--primary);
+            color: white;
+            min-height: 100vh;
+            padding: 2.5rem 1.5rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .admin-main {
+            padding: 3rem;
+        }
+        .stat-card-mini {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+            border-bottom: 4px solid #eee;
+        }
+        .stat-card-mini.total { border-color: #0d6efd; }
+        .stat-card-mini.pending { border-color: #ffc107; }
+        .stat-card-mini.approved { border-color: #198754; }
+        .stat-card-mini.rejected { border-color: #dc3545; }
+
+        .payment-table {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        .table th {
+            background: #f8f9fa;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            padding: 1.25rem 1rem;
+        }
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-approved { background: #d4edda; color: #155724; }
+        .badge-rejected { background: #f8d7da; color: #721c24; }
+
+        .screenshot-thumbnail {
+            width: 80px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .screenshot-thumbnail:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Safe SPA Toggle Classes */
+        .admin-section { display: none; }
+        .admin-section.active-show { 
+            display: block; 
+            animation: fadeIn 0.3s ease-in-out; 
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 admin-sidebar">
+            <h3 class="mb-5">⚡ Admin Panel</h3>
+            <ul class="nav flex-column gap-3">
+                <li class="nav-item">
+                    <a href="#dashboard-section" class="nav-link text-white sidebar-btn active fw-bold" data-target="dashboard-section">📊 Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#approved-section" class="nav-link text-white sidebar-btn" data-target="approved-section">✅ Approved Teams</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#payments-section" class="nav-link text-white sidebar-btn" data-target="payments-section">💰 Payments Approval</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#registrations-section" class="nav-link text-white sidebar-btn" data-target="registrations-section">👥 All Registrations</a>
+                </li>
+                <li class="nav-item mt-5">
+                    <a class="nav-link text-danger" href="/logout">🚪 Logout</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 admin-main">
+            
+                
+            
+
+            <!-- DASHBOARD SECTION -->
+            <div id="dashboard-section" class="admin-section active-show">
+                <div class="mb-5">
+                    <h2>Admin Dashboard</h2>
+                </div>
+
+                <!-- Stats Bar -->
+                <div class="row mb-5">
+                    <div class="col-md-3">
+                        <div class="stat-card-mini total">
+                            <small class="text-muted">TOTAL REGISTRATIONS</small>
+                            <h3 class="mb-0">2</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card-mini pending">
+                            <small class="text-muted">TOTAL PAYMENTS</small>
+                            <h3 class="mb-0 text-primary">3</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card-mini approved">
+                            <small class="text-muted">PENDING VERIFICATION</small>
+                            <h3 class="mb-0 text-warning">1</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card-mini rejected">
+                            <small class="text-muted">APPROVED TEAMS</small>
+                            <h3 class="mb-0 text-success">1</h3>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End Dashboard Section -->
+
+            <!-- APPROVED TEAMS SECTION -->
+            <div id="approved-section" class="admin-section">
+                <div class="mb-5">
+                <h4 class="mb-3">Verified Teams (Approved Payments)</h4>
+                <div class="payment-table">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Team Name</th>
+                                <th>Leader Name</th>
+                                <th>Email / Phone</th>
+                                <th class="text-center">Members Count</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr>
+                                <td><strong>TEST team</strong> <br> <small class="text-muted">PS-003</small></td>
+                                <td>T1</td>
+                                <td>T1@gmail.com <br> <small class="text-muted">9988774455</small></td>
+                                <td class="text-center">
+                                    
+                                    
+                                    
+                                    
+                                    <span class="badge bg-secondary rounded-pill px-3">4</span>
+                                </td>
+                                <td><small class="text-muted">2026-03-22 19:06:21</small></td>
+                            </tr>
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div> <!-- End Approved Section -->
+
+            <!-- PAYMENTS SECTION -->
+            <div id="payments-section" class="admin-section">
+                <div class="mb-3 d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Manage Payment Verifications</h4>
+                    <div class="d-flex gap-2">
+                        <a href="/admin?status=all#payments-section" class="btn btn-outline-secondary btn-sm active">Show All</a>
+                        <a href="/admin?status=pending#payments-section" class="btn btn-outline-warning btn-sm ">Pending</a>
+                        <a href="/admin?status=approved#payments-section" class="btn btn-outline-success btn-sm ">Approved</a>
+                        <a href="/admin?status=rejected#payments-section" class="btn btn-outline-danger btn-sm ">Rejected</a>
+                    </div>
+                </div>
+                <div class="payment-table">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Team / Leader</th>
+                            <th>Contact</th>
+                            <th>UTR / Transaction ID</th>
+                            <th>Proof Screenshot</th>
+                            <th class="text-center">Status</th>
+                            <th>Timestamp</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr class="table-warning">
+                            <td>
+                                <strong>AAA</strong>
+                            </td>
+                            <td>vdnthnd@gmail.com</td>
+                            <td><code class="text-dark">124789456123</code></td>
+                            <td>
+                                <img src="/static/uploads/screenshots/124789456123_dragon-cave-3840x2160-14213.jpg" class="screenshot-thumbnail" alt="Payment Proof" data-bs-toggle="modal" data-bs-target="#imgModal1">
+                                
+                                <!-- Screenshot Modal -->
+                                <div class="modal fade" id="imgModal1" tabindex="-1">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Payment Proof - AAA</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <img src="/static/uploads/screenshots/124789456123_dragon-cave-3840x2160-14213.jpg" class="img-fluid" alt="Payment Proof">
+                                                <hr>
+                                                <p>UTR: <strong>124789456123</strong> | Team: AAA</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="/static/uploads/screenshots/124789456123_dragon-cave-3840x2160-14213.jpg" target="_blank" class="btn btn-primary btn-sm">Open Original Full Size</a>
+                                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span class="status-badge badge-pending">pending</span>
+                            </td>
+                            <td><small class="text-muted">2026-03-22 19:23:41</small></td>
+                            <td class="text-end">
+                                
+                                <div class="btn-group">
+                                    <form action="/admin/payment_action/124789456123/approve" method="POST" onsubmit="return confirm('APPROVE payment for AAA? This will mark their registration as valid.')">
+                                        <button class="btn btn-success btn-sm me-1">✅ Approve</button>
+                                    </form>
+                                    <form action="/admin/payment_action/124789456123/reject" method="POST" onsubmit="return confirm('REJECT payment for AAA? This will mark their registration as invalid.')">
+                                        <button class="btn btn-danger btn-sm">❌ Reject</button>
+                                    </form>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr class="table-success">
+                            <td>
+                                <strong>TEST team</strong>
+                            </td>
+                            <td>T1@gmail.com</td>
+                            <td><code class="text-dark">123456789012</code></td>
+                            <td>
+                                <img src="/static/uploads/screenshots/123456789012_snow-mountains-5120x2880-25876.jpg" class="screenshot-thumbnail" alt="Payment Proof" data-bs-toggle="modal" data-bs-target="#imgModal2">
+                                
+                                <!-- Screenshot Modal -->
+                                <div class="modal fade" id="imgModal2" tabindex="-1">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Payment Proof - TEST team</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <img src="/static/uploads/screenshots/123456789012_snow-mountains-5120x2880-25876.jpg" class="img-fluid" alt="Payment Proof">
+                                                <hr>
+                                                <p>UTR: <strong>123456789012</strong> | Team: TEST team</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="/static/uploads/screenshots/123456789012_snow-mountains-5120x2880-25876.jpg" target="_blank" class="btn btn-primary btn-sm">Open Original Full Size</a>
+                                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span class="status-badge badge-approved">approved</span>
+                            </td>
+                            <td><small class="text-muted">2026-03-22 19:09:34</small></td>
+                            <td class="text-end">
+                                
+                                <span class="text-muted">Locked - APPROVED</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        <tr class="table-danger">
+                            <td>
+                                <strong>WWW</strong>
+                            </td>
+                            <td>vdnthnd@gmail.com</td>
+                            <td><code class="text-dark">120083733088</code></td>
+                            <td>
+                                <img src="/static/uploads/screenshots/120083733088_pexels-pixabay-531321_1.jpg" class="screenshot-thumbnail" alt="Payment Proof" data-bs-toggle="modal" data-bs-target="#imgModal3">
+                                
+                                <!-- Screenshot Modal -->
+                                <div class="modal fade" id="imgModal3" tabindex="-1">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Payment Proof - WWW</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <img src="/static/uploads/screenshots/120083733088_pexels-pixabay-531321_1.jpg" class="img-fluid" alt="Payment Proof">
+                                                <hr>
+                                                <p>UTR: <strong>120083733088</strong> | Team: WWW</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="/static/uploads/screenshots/120083733088_pexels-pixabay-531321_1.jpg" target="_blank" class="btn btn-primary btn-sm">Open Original Full Size</a>
+                                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span class="status-badge badge-rejected">rejected</span>
+                            </td>
+                            <td><small class="text-muted">2026-03-21 12:25:46</small></td>
+                            <td class="text-end">
+                                
+                                <span class="text-muted">Locked - REJECTED</span>
+                                
+                            </td>
+                        </tr>
+                        
+                        
+                    </tbody>
+                </table>
+            </div>
+            </div> <!-- End Payments Section -->
+
+            <!-- ALL REGISTRATIONS SECTION -->
+            <div id="registrations-section" class="admin-section">
+                <div class="mb-3 d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">All Registrations</h4>
+                <div class="d-flex gap-2">
+                    <select id="topicFilter" class="form-select form-select-sm" style="width: auto;">
+                        <option value="all">All Problem Statements</option>
+                        
+                        <option value="PS-001">PS-001 (1/10)</option>
+                        
+                        <option value="PS-002">PS-002 (0/10)</option>
+                        
+                        <option value="PS-003">PS-003 (1/10)</option>
+                        
+                        <option value="PS-004">PS-004 (0/10)</option>
+                        
+                        <option value="PS-005">PS-005 (0/10)</option>
+                        
+                        <option value="PS-006">PS-006 (0/10)</option>
+                        
+                        <option value="PS-007">PS-007 (0/10)</option>
+                        
+                        <option value="PS-008">PS-008 (0/10)</option>
+                        
+                        <option value="PS-009">PS-009 (0/10)</option>
+                        
+                        <option value="PS-010">PS-010 (0/10)</option>
+                        
+                        <option value="PS-011">PS-011 (0/10)</option>
+                        
+                        <option value="PS-012">PS-012 (0/10)</option>
+                        
+                        <option value="PS-013">PS-013 (0/10)</option>
+                        
+                        <option value="PS-014">PS-014 (0/10)</option>
+                        
+                        <option value="PS-015">PS-015 (0/10)</option>
+                        
+                        <option value="PS-016">PS-016 (0/10)</option>
+                        
+                        <option value="PS-017">PS-017 (0/10)</option>
+                        
+                        <option value="PS-018">PS-018 (0/10)</option>
+                        
+                        <option value="PS-019">PS-019 (0/10)</option>
+                        
+                        <option value="PS-020">PS-020 (0/10)</option>
+                        
+                        <option value="PS-021">PS-021 (0/10)</option>
+                        
+                        <option value="PS-022">PS-022 (0/10)</option>
+                        
+                        <option value="PS-023">PS-023 (0/10)</option>
+                        
+                        <option value="PS-024">PS-024 (0/10)</option>
+                        
+                        <option value="PS-025">PS-025 (0/10)</option>
+                        
+                        <option value="PS-026">PS-026 (0/10)</option>
+                        
+                        <option value="PS-027">PS-027 (0/10)</option>
+                        
+                        <option value="PS-028">PS-028 (0/10)</option>
+                        
+                        <option value="PS-029">PS-029 (0/10)</option>
+                        
+                        <option value="PS-030">PS-030 (0/10)</option>
+                        
+                        <option value="PS-031">PS-031 (0/10)</option>
+                        
+                        <option value="PS-032">PS-032 (0/10)</option>
+                        
+                        <option value="PS-033">PS-033 (0/10)</option>
+                        
+                        <option value="PS-034">PS-034 (0/10)</option>
+                        
+                        <option value="PS-035">PS-035 (0/10)</option>
+                        
+                        <option value="PS-036">PS-036 (0/10)</option>
+                        
+                        <option value="PS-037">PS-037 (0/10)</option>
+                        
+                        <option value="PS-038">PS-038 (0/10)</option>
+                        
+                        <option value="PS-039">PS-039 (0/10)</option>
+                        
+                        <option value="PS-040">PS-040 (0/10)</option>
+                        
+                        <option value="PS-041">PS-041 (0/10)</option>
+                        
+                        <option value="PS-042">PS-042 (0/10)</option>
+                        
+                        <option value="PS-043">PS-043 (0/10)</option>
+                        
+                        <option value="PS-044">PS-044 (0/10)</option>
+                        
+                        <option value="PS-045">PS-045 (0/10)</option>
+                        
+                        <option value="PS-046">PS-046 (0/10)</option>
+                        
+                        <option value="PS-047">PS-047 (0/10)</option>
+                        
+                        <option value="PS-048">PS-048 (0/10)</option>
+                        
+                        <option value="PS-049">PS-049 (0/10)</option>
+                        
+                        <option value="PS-050">PS-050 (0/10)</option>
+                        
+                    </select>
+                    <input type="text" id="adminSearch" class="form-control form-control-sm" placeholder="Search teams, names..." style="width: 250px;">
+                </div>
+            </div>
+
+            
+            <div class="payment-table mb-4">
+                <table class="table table-hover align-middle mb-0" id="adminTable">
+                    <thead>
+                        <tr>
+                            <th>Sr No</th>
+                            <th>PS ID</th>
+                            <th>Team Name</th>
+                            <th>College</th>
+                            <th>Leader</th>
+                            <th>Email / Phone</th>
+                            <th>Members</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr class="admin-row" data-topic="PS-001" style="cursor: pointer;" onclick="toggleDetails('details-2')">
+                            <td>1</td>
+                            <td><span class="badge bg-primary rounded-pill">PS-001</span></td>
+                            <td><strong>AAA</strong></td>
+                            <td>Zeal</td>
+                            <td>Vedant</td>
+                            <td>vdnthnd@gmail.com<br><small class="text-muted">8208512481</small></td>
+                            <td>
+                                
+                                
+                                
+                                
+                                
+                                    <small class="text-muted">shantanu, arya, gauri</small>
+                                
+                            </td>
+                            <td class="text-end">
+                                <form action="/delete_registration/2" method="POST" class="delete-form" data-team="AAA" onclick="event.stopPropagation();">
+                                    <button class="btn btn-danger btn-sm" title="Delete this registration">🗑️</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <!-- Expandable Details Row -->
+                        <tr id="details-2" class="details-row bg-light" style="display: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                            <td colspan="8" class="p-4 border-bottom">
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <div class="bg-white p-3 rounded border">
+                                            <h6 class="text-primary mb-2">👤 Team Leader</h6>
+                                            <strong>Vedant</strong><br>
+                                            <small class="text-muted">🎓 Zeal<br>📧 vdnthnd@gmail.com<br>📞 8208512481</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="bg-white p-3 rounded border">
+                                            <h6 class="text-primary mb-2">🤝 Member 2</h6>
+                                            <strong>shantanu</strong><br>
+                                            <small class="text-muted">🎓 jspm<br>📧 shantanu@gmail.com<br>📞 6549873210</small>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-3">
+                                        <div class="bg-white p-3 rounded border">
+                                            <h6 class="text-primary mb-2">🤝 Member 3</h6>
+                                            <strong>arya</strong><br>
+                                            <small class="text-muted">🎓 zeal<br>📧 arya@gmail.com<br>📞 9873216540</small>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-3">
+                                        <div class="bg-white p-3 rounded border">
+                                            <h6 class="text-primary mb-2">🤝 Member 4</h6>
+                                            <strong>gauri</strong><br>
+                                            <small class="text-muted">🎓 symbiosis<br>📧 gauri@gmail.com<br>📞 7788996655</small>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="admin-row" data-topic="PS-003" style="cursor: pointer;" onclick="toggleDetails('details-1')">
+                            <td>2</td>
+                            <td><span class="badge bg-primary rounded-pill">PS-003</span></td>
+                            <td><strong>TEST team</strong></td>
+                            <td>TCOEP</td>
+                            <td>T1</td>
+                            <td>T1@gmail.com<br><small class="text-muted">9988774455</small></td>
+                            <td>
+                                
+                                
+                                
+                                
+                                
+                                    <small class="text-muted">T2, T3, T4</small>
+                                
+                            </td>
+                            <td class="text-end">
+                                <form action="/delete_registration/1" method="POST" class="delete-form" data-team="TEST team" onclick="event.stopPropagation();">
+                                    <button class="btn btn-danger btn-sm" title="Delete this registration">🗑️</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <!-- Expandable Details Row -->
+                        <tr id="details-1" class="details-row bg-light" style="display: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                            <td colspan="8" class="p-4 border-bottom">
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <div class="bg-white p-3 rounded border">
+                                            <h6 class="text-primary mb-2">👤 Team Leader</h6>
+                                            <strong>T1</strong><br>
+                                            <small class="text-muted">🎓 TCOEP<br>📧 T1@gmail.com<br>📞 9988774455</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="bg-white p-3 rounded border">
+                                            <h6 class="text-primary mb-2">🤝 Member 2</h6>
+                                            <strong>T2</strong><br>
+                                            <small class="text-muted">🎓 TCOEP<br>📧 T2@GMAIL.COM<br>📞 9977884455</small>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-3">
+                                        <div class="bg-white p-3 rounded border">
+                                            <h6 class="text-primary mb-2">🤝 Member 3</h6>
+                                            <strong>T3</strong><br>
+                                            <small class="text-muted">🎓 TCOEP<br>📧 T3@GMAIL.COM<br>📞 8899774455</small>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-3">
+                                        <div class="bg-white p-3 rounded border">
+                                            <h6 class="text-primary mb-2">🤝 Member 4</h6>
+                                            <strong>T4</strong><br>
+                                            <small class="text-muted">🎓 TCOEP<br>📧 T4@GMAIL.COM<br>📞 9988445566</small>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+            <p class="text-muted" id="adminShowingInfo">
+                Showing 2 of 2 entries
+            </p>
+            
+            </div> <!-- End Registrations Section -->
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Scripts for SPA Layout -->
+<script>
+    function showSection(sectionId) {
+        // Hide all sections
+        const sections = document.querySelectorAll('.admin-section');
+        sections.forEach(sec => {
+            sec.classList.remove('active-show');
+        });
+        
+        // Show target
+        const target = document.getElementById(sectionId);
+        if(target) {
+            target.classList.add('active-show');
+        }
+
+        // Highlight sidebar button securely
+        const buttons = document.querySelectorAll('.sidebar-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('fw-bold', 'active');
+            if(btn.getAttribute('data-target') === sectionId) {
+                btn.classList.add('fw-bold', 'active');
+            }
+        });
+        
+        // Update URL to preserve state properly
+        if(window.location.hash !== '#' + sectionId) {
+            history.replaceState(null, null, '#' + sectionId);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Intercept sidebar clicks securely
+        const buttons = document.querySelectorAll('.sidebar-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-target');
+                showSection(targetId);
+            });
+        });
+
+        // Load section from URL hash if exists
+        let hash = window.location.hash.substring(1);
+        const validSections = ['dashboard-section', 'registrations-section', 'payments-section', 'approved-section'];
+        if (hash && validSections.includes(hash)) {
+            showSection(hash);
+        } else {
+            showSection('dashboard-section');
+        }
+    });
+</script>
+
+<!-- Scripts for Registrations Table -->
+<script>
+    const searchInput = document.getElementById('adminSearch');
+    const topicFilter = document.getElementById('topicFilter');
+    const table = document.getElementById('adminTable');
+    const showingInfo = document.getElementById('adminShowingInfo');
+
+    function toggleDetails(rowId) {
+        const detailRow = document.getElementById(rowId);
+        if(detailRow.style.display === 'none') {
+            detailRow.style.display = 'table-row';
+        } else {
+            detailRow.style.display = 'none';
+        }
+    }
+
+    if (table) {
+        const tbody = table.querySelector('tbody');
+        const rows = tbody.querySelectorAll('.admin-row');
+        const totalRows = rows.length;
+
+        function filterAdmin() {
+            const query = searchInput.value.toLowerCase().trim();
+            const selectedTopic = topicFilter.value;
+            let visibleCount = 0;
+
+            document.querySelectorAll('.details-row').forEach(row => row.style.display = 'none');
+
+            rows.forEach(row => {
+                const rowTopic = row.getAttribute('data-topic') || '';
+                const rowText = row.textContent.toLowerCase();
+
+                const matchesTopic = selectedTopic === 'all' || rowTopic === selectedTopic;
+                const matchesSearch = rowText.includes(query);
+
+                if (matchesTopic && matchesSearch) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (showingInfo) {
+                showingInfo.textContent = `Showing ${visibleCount} of ${totalRows} entries`;
+            }
+        }
+
+        if (searchInput) searchInput.addEventListener('input', filterAdmin);
+        if (topicFilter) topicFilter.addEventListener('change', filterAdmin);
+    }
+
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const teamName = this.getAttribute('data-team');
+            if (!confirm('Are you sure you want to delete team "' + teamName + '"?')) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+</body>
+</html>

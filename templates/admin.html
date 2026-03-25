@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVISHKAR - Control Panel</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --sidebar-bg: #0b1120;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-header img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: white;
+            background-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 2rem 3rem;
+            background-color: var(--bg-color);
+        }
+
+        /* Safe SPA Toggle */
+        .admin-section {
+            display: none !important;
+        }
+        .admin-section.active-show {
+            display: block !important;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Panel & Card Controls */
+        .control-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .control-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .control-header h4 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .data-table-wrapper {
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .table {
+            margin-bottom: 0;
+            color: var(--text-main);
+        }
+
+        .table > :not(caption) > * > * {
+            background-color: transparent;
+            border-bottom-color: var(--border);
+            padding: 1rem;
+        }
+
+        .table thead th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            background-color: rgba(0,0,0,0.2) !important;
+        }
+
+        .table tbody tr:hover td {
+            background-color: rgba(255, 255, 255, 0.02);
+            color: var(--text-main);
+        }
+
+        /* Custom UI Elements */
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .badge-open { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+        .badge-paused { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+        .badge-closed { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); }
+        
+        .badge-approved { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .badge-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+        .badge-rejected { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+        .badge-flagged { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); }
+
+        .thumbnail {
+            width: 60px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+        .thumbnail:hover {
+            transform: scale(1.1);
+        }
+
+        .custom-input {
+            background-color: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+        .custom-input:focus {
+            background-color: rgba(0,0,0,0.3);
+            border-color: var(--accent);
+            color: var(--text-main);
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+        }
+
+        /* Modal Overrides */
+        .modal-content {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border);
+        }
+        .modal-header {
+            border-bottom-color: var(--border);
+        }
+        .modal-footer {
+            border-top-color: var(--border);
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-cube text-primary fs-3"></i>
+            <h4 class="mb-0 fw-bold">CONTROL<span class="text-primary">PANEL</span></h4>
+        </div>
+        
+        <div class="nav-menu">
+            <div class="nav-item">
+                <a class="nav-link active sidebar-btn" data-target="system-control">
+                    <i class="fa-solid fa-sliders"></i> System Control
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link sidebar-btn" data-target="dashboard">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link sidebar-btn" data-target="payment-verification">
+                    <i class="fa-solid fa-money-check-dollar"></i> Payment Verification
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link sidebar-btn" data-target="team-management">
+                    <i class="fa-solid fa-users-gear"></i> Team Management
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link sidebar-btn" data-target="announcements">
+                    <i class="fa-solid fa-bullhorn"></i> Announcements
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link sidebar-btn" data-target="config">
+                    <i class="fa-solid fa-gear"></i> Config
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link sidebar-btn" data-target="logs">
+                    <i class="fa-solid fa-terminal"></i> Logs
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-auto p-3 border-top" style="border-color: var(--border) !important;">
+            <a href="{{ url_for('logout') }}" class="nav-link text-danger">
+                <i class="fa-solid fa-right-from-bracket"></i> Disconnect
+            </a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- 1. SYSTEM CONTROL (Default) -->
+        <div id="system-control" class="admin-section active-show">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold m-0"><i class="fa-solid fa-sliders text-primary me-2"></i> System Control</h2>
+                <button class="btn btn-primary" onclick="saveSystemConfig()">
+                    <i class="fa-solid fa-save me-1"></i> Save Changes
+                </button>
+            </div>
+
+            <div class="row g-4">
+                <!-- Reg Status Flow -->
+                <div class="col-md-6">
+                    <div class="control-panel h-100">
+                        <div class="control-header">
+                            <h4>Registration Pipeline</h4>
+                            <p class="text-muted small mb-0">Control the global flow of incoming teams.</p>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-muted fw-bold text-uppercase fs-7">Status</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="regStatus" id="statusOpen" value="open" {% if config.registration_status == 'open' %}checked{% endif %}>
+                                    <label class="form-check-label text-success" for="statusOpen">Open (Accepting)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="regStatus" id="statusPause" value="pause" {% if config.registration_status == 'pause' %}checked{% endif %}>
+                                    <label class="form-check-label text-warning" for="statusPause">Paused</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="regStatus" id="statusClosed" value="closed" {% if config.registration_status == 'closed' %}checked{% endif %}>
+                                    <label class="form-check-label text-danger" for="statusClosed">Closed</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted fw-bold text-uppercase fs-7">Global Deadline</label>
+                            <input type="datetime-local" id="sysDeadline" class="form-control custom-input" value="{{ config.deadline.replace(' ', 'T') if config.deadline else '' }}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Limits & Maintenance -->
+                <div class="col-md-6">
+                    <div class="control-panel h-100">
+                        <div class="control-header">
+                            <h4>System Restrictions</h4>
+                            <p class="text-muted small mb-0">Hard limits and emergency overrides.</p>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-muted fw-bold text-uppercase fs-7">Global Maximum Teams limit</label>
+                            <input type="number" id="sysMaxTeams" class="form-control custom-input" value="{{ config.max_teams }}">
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label text-muted fw-bold text-uppercase fs-7">Maintenance Mode</label>
+                            <div class="form-check form-switch pt-2">
+                                <input class="form-check-input" type="checkbox" id="sysMaintenance" role="switch" style="width: 3rem; height: 1.5rem;" {% if config.maintenance_mode == 'on' %}checked{% endif %}>
+                                <label class="form-check-label ms-3 py-1" for="sysMaintenance" id="sysMaintenanceLabel">
+                                    {% if config.maintenance_mode == 'on' %}<span class="text-danger">Emergency Lockout Enabled</span>{% else %}Normal Operations{% endif %}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. DASHBOARD -->
+        <div id="dashboard" class="admin-section">
+            <h2 class="fw-bold mb-4"><i class="fa-solid fa-chart-line text-primary me-2"></i> Analytics Dashboard</h2>
+            
+            <div class="row g-4 mb-5">
+                <div class="col-md-3">
+                    <div class="control-panel text-center h-100 py-4" style="border-top: 4px solid var(--accent)">
+                        <h1 class="display-4 fw-bold text-white mb-0">{{ stats.total_registrations }}</h1>
+                        <p class="text-muted text-uppercase letter-spacing-1 mt-2 mb-0">Total Form Submissions</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="control-panel text-center h-100 py-4" style="border-top: 4px solid var(--warning)">
+                        <h1 class="display-4 fw-bold text-white mb-0">{{ stats.pending_payments }}</h1>
+                        <p class="text-muted text-uppercase letter-spacing-1 mt-2 mb-0">Pending Approvals</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="control-panel text-center h-100 py-4" style="border-top: 4px solid var(--success)">
+                        <h1 class="display-4 fw-bold text-white mb-0">{{ stats.approved_teams }}</h1>
+                        <p class="text-muted text-uppercase letter-spacing-1 mt-2 mb-0">Fully Verified Teams</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="control-panel text-center h-100 py-4" style="border-top: 4px solid var(--danger)">
+                        <h1 class="display-4 fw-bold text-white mb-0">{{ stats.total_payments - stats.approved_teams - stats.pending_payments }}</h1>
+                        <p class="text-muted text-uppercase letter-spacing-1 mt-2 mb-0">Rejected Payments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. PAYMENT VERIFICATION -->
+        <div id="payment-verification" class="admin-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold m-0"><i class="fa-solid fa-money-check-dollar text-primary me-2"></i> Payment Verification</h2>
+                
+                <div class="btn-group border border-secondary rounded">
+                    <button class="btn btn-sm btn-dark px-3 py-2 active" onclick="filterPayments('all')">All</button>
+                    <button class="btn btn-sm btn-dark px-3 py-2 text-warning" onclick="filterPayments('pending')">Pending</button>
+                    <button class="btn btn-sm btn-dark px-3 py-2 text-success" onclick="filterPayments('approved')">Approved</button>
+                    <button class="btn btn-sm btn-dark px-3 py-2 text-info" onclick="filterPayments('flagged')">Flagged</button>
+                </div>
+            </div>
+
+            <div class="data-table-wrapper table-responsive">
+                <table class="table align-middle" id="paymentsTable">
+                    <thead>
+                        <tr>
+                            <th>Team / Leader</th>
+                            <th>Contact</th>
+                            <th>UTR ID</th>
+                            <th>Proof</th>
+                            <th class="text-center">Status</th>
+                            <th>Timestamp</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in payments %}
+                        <tr class="payment-row" data-status="{{ p.status }}">
+                            <td><strong>{{ p.name }}</strong></td>
+                            <td>{{ p.contact }}</td>
+                            <td><code class="text-accent bg-transparent p-0">{{ p.utr }}</code></td>
+                            <td>
+                                <img src="{{ p.screenshot_url }}" class="thumbnail" onclick="openImageModal('{{ p.screenshot_url }}', '{{ p.utr }}', '{{ p.name }}')" alt="Proof">
+                            </td>
+                            <td class="text-center" id="status-col-{{ p.utr }}">
+                                <span class="status-badge badge-{{ p.status }}">{{ p.status }}</span>
+                            </td>
+                            <td><span class="text-muted small">{{ p.timestamp }}</span></td>
+                            <td class="text-end" id="action-col-{{ p.utr }}">
+                                {% if p.status == 'pending' or p.status == 'flagged' %}
+                                    <button class="btn btn-sm btn-success me-1" onclick="handlePaymentAjax('{{ p.utr }}', 'approve')"><i class="fa-solid fa-check"></i></button>
+                                    <button class="btn btn-sm btn-danger me-1" onclick="handlePaymentAjax('{{ p.utr }}', 'reject')"><i class="fa-solid fa-xmark"></i></button>
+                                    <button class="btn btn-sm btn-info" onclick="handlePaymentAjax('{{ p.utr }}', 'flagged')" title="Flag Suspicious"><i class="fa-solid fa-flag"></i></button>
+                                {% else %}
+                                    <span class="text-muted small opacity-50"><i class="fa-solid fa-lock me-1"></i> Locked</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="7" class="text-center py-5 text-muted">No payments found in database.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 4. TEAM MANAGEMENT -->
+        <div id="team-management" class="admin-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold m-0"><i class="fa-solid fa-users-gear text-primary me-2"></i> Team Management</h2>
+                
+                <div class="d-flex gap-3">
+                    <select class="form-select custom-input" id="teamViewMode" onchange="filterTeams()" style="width: auto;">
+                        <option value="verified">Verified Teams Only</option>
+                        <option value="all">All Submissions</option>
+                        <option value="blacklisted">Blacklisted</option>
+                    </select>
+                    <input type="text" id="teamSearch" class="form-control custom-input" placeholder="Search team names..." style="width: 250px;" oninput="filterTeams()">
+                </div>
+            </div>
+
+            <div class="data-table-wrapper table-responsive">
+                <table class="table align-middle" id="teamsTable">
+                    <thead>
+                        <tr>
+                            <th>PS ID</th>
+                            <th>Team Name</th>
+                            <th>Leader</th>
+                            <th>Contact</th>
+                            <th>Verified</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set verified_emails = payments | selectattr("status", "equalto", "approved") | map(attribute="contact") | list %}
+                        {% for reg in registrations %}
+                        {% set is_verified = reg.email in verified_emails %}
+                        <tr class="team-row" data-name="{{ reg.team_name | lower }}" data-status="{% if is_verified %}verified{% else %}unverified{% endif %}">
+                            <td><span class="badge bg-primary text-white bg-opacity-75 border border-primary">{{ reg.topic }}</span></td>
+                            <td><strong>{{ reg.team_name }}</strong></td>
+                            <td>{{ reg.leader_name }}</td>
+                            <td><span class="text-muted small">{{ reg.email }}</span><br>{{ reg.phone }}</td>
+                            <td>
+                                {% if is_verified %}
+                                <span class="status-badge badge-approved"><i class="fa-solid fa-shield-check"></i> Yes</span>
+                                {% else %}
+                                <span class="status-badge badge-pending">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-info me-1" onclick="alert('Edit Details arriving in future update')"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-outline-warning me-1" onclick="alert('Change PS arriving in future update')"><i class="fa-solid fa-shuffle"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="handleDeleteRegistrationAjax('{{ reg.id }}', '{{ reg.team_name }}')"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="6" class="text-center py-5 text-muted">No teams found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. ANNOUNCEMENTS -->
+        <div id="announcements" class="admin-section">
+            <h2 class="fw-bold mb-4"><i class="fa-solid fa-bullhorn text-primary me-2"></i> Announcements</h2>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="control-panel">
+                        <div class="control-header">
+                            <h4>New Broadcast</h4>
+                            <p class="text-muted small mb-0">Push messages to participants</p>
+                        </div>
+                        <input type="text" id="annTitle" class="form-control custom-input mb-3" placeholder="Message Title">
+                        <textarea id="annContent" class="form-control custom-input mb-3" rows="4" placeholder="Type your broadcast message..."></textarea>
+                        <button class="btn btn-primary w-100" onclick="postAnnouncement()"><i class="fa-solid fa-paper-plane me-2"></i>Broadcast Now</button>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="control-panel h-100">
+                        <div class="control-header">
+                            <h4>Broadcast History</h4>
+                        </div>
+                        <div class="d-flex flex-column gap-3" id="announcementList">
+                            {% for ann in announcements | reverse %}
+                            <div class="p-3 bg-dark rounded border border-secondary" id="ann-{{ ann.id }}">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0 fw-bold text-accent">{{ ann.title }}</h6>
+                                    <div>
+                                        <small class="text-muted me-3">{{ ann.timestamp }}</small>
+                                        <button class="btn btn-sm text-danger p-0" onclick="deleteAnnouncement('{{ ann.id }}')"><i class="fa-solid fa-trash"></i></button>
+                                    </div>
+                                </div>
+                                <p class="mb-0 small text-muted">{{ ann.content }}</p>
+                            </div>
+                            {% else %}
+                            <p class="text-muted fst-italic text-center py-4">No announcements broadcasted yet.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. CONFIGURATION -->
+        <div id="config" class="admin-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold m-0"><i class="fa-solid fa-gear text-primary me-2"></i> Configuration Variables</h2>
+                <button class="btn btn-primary" onclick="alert('Saved configuration securely to Google Sheets (Mock)')"><i class="fa-solid fa-save me-1"></i> Save Changes</button>
+            </div>
+            
+            <div class="control-panel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted fw-bold">Payment Gateway UPI ID</label>
+                        <input type="text" class="form-control custom-input" value="{{ config.payment_upi }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted fw-bold">Registration Fee (₹)</label>
+                        <input type="number" class="form-control custom-input" value="{{ config.payment_amount }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. LOGS -->
+        <div id="logs" class="admin-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold m-0"><i class="fa-solid fa-terminal text-primary me-2"></i> Audit Logs</h2>
+                <button class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-download"></i> Export Raw</button>
+            </div>
+            
+            <div class="control-panel font-monospace small bg-black border-dark">
+                <div style="height: 400px; overflow-y: auto; color: #a3be8c;">
+                    [System] 2026-03-23 10:45:12 - Server initiated <br>
+                    [Auth] 2026-03-23 10:46:01 - Admin logged in from 192.168.1.1 <br>
+                    [DB] 2026-03-23 10:46:05 - Google Sheets Synced (2 msgs) <br>
+                    [Action] 2026-03-23 11:22:15 - Payment for UTR 123456789012 Approved <br>
+                    <span class="text-danger">[Error] 2026-03-23 12:01:00 - Failed generic connection attempt to port 5000</span> <br>
+                    [System] Awaiting operations... <br>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Global Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" data-bs-theme="dark">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title text-accent code-font" id="modalUtr"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-3 text-muted">Team: <strong class="text-white" id="modalTeam"></strong></p>
+                    <img id="modalImg" src="" class="img-fluid rounded border border-secondary shadow-lg">
+                </div>
+                <div class="modal-footer border-top-0 pt-0 justify-content-center">
+                    <a id="modalFullBtn" href="" target="_blank" class="btn btn-primary"><i class="fa-solid fa-expand me-2"></i>View Original Origin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // SPA Navigation Logic
+        function showSection(sectionId) {
+            document.querySelectorAll('.admin-section').forEach(sec => {
+                sec.classList.remove('active-show');
+            });
+            
+            const target = document.getElementById(sectionId);
+            if(target) {
+                target.classList.add('active-show');
+                window.scrollTo(0, 0);
+            }
+
+            document.querySelectorAll('.sidebar-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.getAttribute('data-target') === sectionId) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            if(window.location.hash !== '#' + sectionId) {
+                history.replaceState(null, null, '#' + sectionId);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.sidebar-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showSection(this.getAttribute('data-target'));
+                });
+            });
+
+            // Deep linking support
+            let hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                showSection(hash);
+            }
+            
+            // Initialization Logic
+            filterTeams(); // run initial filter for default dropdown state
+            
+            // UI Toggle Logic
+            const maintenanceToggle = document.getElementById('sysMaintenance');
+            if(maintenanceToggle) {
+                maintenanceToggle.addEventListener('change', function(e) {
+                    document.getElementById('sysMaintenanceLabel').innerHTML = this.checked ? 
+                        '<span class="text-danger">Emergency Lockout Enabled</span>' : 
+                        '<span class="text-success">Normal Operations</span>';
+                });
+            }
+        });
+
+        // ==========================================
+        // UI & AJAX HANDLERS
+        // ==========================================
+        
+        function filterPayments(status) {
+            document.querySelectorAll('.payment-row').forEach(row => {
+                row.style.display = (status === 'all' || row.dataset.status === status) ? '' : 'none';
+            });
+            // Update button styles
+            event.target.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function filterTeams() {
+            const mode = document.getElementById('teamViewMode').value;
+            const query = document.getElementById('teamSearch').value.toLowerCase();
+            
+            document.querySelectorAll('.team-row').forEach(row => {
+                const nameMatch = row.dataset.name.includes(query);
+                const statusMatch = mode === 'all' || row.dataset.status === mode;
+                row.style.display = (nameMatch && statusMatch) ? '' : 'none';
+            });
+        }
+
+        function openImageModal(imgUrl, utr, team) {
+            document.getElementById('modalImg').src = imgUrl;
+            document.getElementById('modalUtr').textContent = "UTR: " + utr;
+            document.getElementById('modalTeam').textContent = team;
+            document.getElementById('modalFullBtn').href = imgUrl;
+            new bootstrap.Modal(document.getElementById('imageModal')).show();
+        }
+
+        // ==========================================
+        // AJAX ENDPOINTS
+        // ==========================================
+
+        async function saveSystemConfig() {
+            const btn = event.currentTarget;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+            
+            const config = {
+                registration_status: document.querySelector('input[name="regStatus"]:checked').value,
+                max_teams: parseInt(document.getElementById('sysMaxTeams').value),
+                deadline: document.getElementById('sysDeadline').value.replace('T', ' '),
+                maintenance_mode: document.getElementById('sysMaintenance').checked ? 'on' : 'off'
+            };
+
+            try {
+                const res = await fetch('/admin/api/update_system', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(config)
+                });
+                if(res.ok) {
+                    btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Saved';
+                    setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-save me-1"></i> Save Changes', 2000);
+                }
+            } catch (e) {
+                alert("Failed to save config.");
+                btn.innerHTML = '<i class="fa-solid fa-save me-1"></i> Save Changes';
+            }
+        }
+
+        async function handlePaymentAjax(utr, action) {
+            if(!confirm(`Are you sure you want to mark ${utr} as ${action.toUpperCase()}?`)) return;
+            try {
+                const res = await fetch(`/admin/payment_action/${utr}/${action}`, { method: 'POST' });
+                const data = await res.json();
+                if(data.success) {
+                    // Update DOM instantly
+                    const row = document.querySelector(`.payment-row:has(#action-col-${utr})`);
+                    row.dataset.status = data.status;
+                    const bColor = data.status === 'approved' ? 'success' : (data.status === 'rejected' ? 'danger' : (data.status === 'flagged' ? 'flagged' : 'pending'));
+                    document.getElementById(`status-col-${utr}`).innerHTML = `<span class="status-badge badge-${bColor}">${data.status}</span>`;
+                    document.getElementById(`action-col-${utr}`).innerHTML = `<span class="text-muted small opacity-50"><i class="fa-solid fa-lock me-1"></i> Locked (${data.status})</span>`;
+                }
+            } catch (e) { alert("Action failed."); }
+        }
+
+        async function handleDeleteRegistrationAjax(id, name) {
+            if(!confirm(`CRITICAL WARNING: Are you sure you want to permanently delete team '${name}'? This cannot be undone.`)) return;
+            try {
+                const res = await fetch(`/delete_registration/${id}`, { method: 'POST' });
+                const data = await res.json();
+                if(data.success) {
+                    const row = document.querySelector(`.team-row[data-name="${name.toLowerCase()}"]`);
+                    if(row) row.remove();
+                } else alert(data.error);
+            } catch (e) { alert("Deletion failed."); }
+        }
+
+        async function postAnnouncement() {
+            const title = document.getElementById('annTitle').value;
+            const content = document.getElementById('annContent').value;
+            if(!title || !content) return alert("Fill both fields");
+
+            try {
+                const res = await fetch('/admin/api/announcement', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ title, content })
+                });
+                const data = await res.json();
+                if(data.success) location.reload(); // Simple refresh to show new log
+            } catch (e) { alert("Failed to post broadcast"); }
+        }
+
+        async function deleteAnnouncement(id) {
+            if(!confirm("Remove announcement?")) return;
+            await fetch(`/admin/api/delete_announcement/${id}`, { method: 'POST' });
+            document.getElementById(`ann-${id}`).remove();
+        }
+
+    </script>
+</body>
+</html>

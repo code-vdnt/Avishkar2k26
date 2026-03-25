@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVISHKAR Admin - Payments</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A2540;
+            --accent: #FF6A00;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f6;
+        }
+        .admin-sidebar {
+            background: var(--primary);
+            color: white;
+            min-height: 100vh;
+            padding: 2.5rem 1.5rem;
+        }
+        .admin-main {
+            padding: 3rem;
+        }
+        .stat-card-mini {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+            border-bottom: 4px solid #eee;
+        }
+        .stat-card-mini.total { border-color: #0d6efd; }
+        .stat-card-mini.pending { border-color: #ffc107; }
+        .stat-card-mini.approved { border-color: #198754; }
+        .stat-card-mini.rejected { border-color: #dc3545; }
+
+        .payment-table {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        .table th {
+            background: #f8f9fa;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            padding: 1.25rem 1rem;
+        }
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-approved { background: #d4edda; color: #155724; }
+        .badge-rejected { background: #f8d7da; color: #721c24; }
+
+        .screenshot-thumbnail {
+            width: 80px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .screenshot-thumbnail:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 admin-sidebar">
+            <h3 class="mb-5">⚡ Admin Panel</h3>
+            <ul class="nav flex-column gap-3">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('admin') }}">👥 Registrations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-bold active" href="{{ url_for('admin_payments') }}">💰 Payments Approval</a>
+                </li>
+                <li class="nav-item mt-5">
+                    <a class="nav-link text-danger" href="{{ url_for('logout') }}">🚪 Logout</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 admin-main">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h2>Manage Payment Verifications</h2>
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('admin_payments', status='all') }}" class="btn btn-outline-secondary btn-sm {% if current_filter == 'all' %}active{% endif %}">Show All</a>
+                    <a href="{{ url_for('admin_payments', status='pending') }}" class="btn btn-outline-warning btn-sm {% if current_filter == 'pending' %}active{% endif %}">Pending</a>
+                    <a href="{{ url_for('admin_payments', status='approved') }}" class="btn btn-outline-success btn-sm {% if current_filter == 'approved' %}active{% endif %}">Approved</a>
+                    <a href="{{ url_for('admin_payments', status='rejected') }}" class="btn btn-outline-danger btn-sm {% if current_filter == 'rejected' %}active{% endif %}">Rejected</a>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="row mb-5">
+                <div class="col-md-3">
+                    <div class="stat-card-mini total">
+                        <small class="text-muted">TOTAL SUBMISSIONS</small>
+                        <h3 class="mb-0">{{ stats.total }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card-mini pending">
+                        <small class="text-muted">PENDING VERIFICATION</small>
+                        <h3 class="mb-0 text-warning">{{ stats.pending }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card-mini approved">
+                        <small class="text-muted">APPROVED ENTRIES</small>
+                        <h3 class="mb-0 text-success">{{ stats.approved }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card-mini rejected">
+                        <small class="text-muted">REJECTED ENTRIES</small>
+                        <h3 class="mb-0 text-danger">{{ stats.rejected }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show mb-4">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Table -->
+            <div class="payment-table">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Team / Leader</th>
+                            <th>Contact</th>
+                            <th>UTR / Transaction ID</th>
+                            <th>Proof Screenshot</th>
+                            <th class="text-center">Status</th>
+                            <th>Timestamp</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in payments %}
+                        <tr class="{% if p.status == 'approved' %}table-success{% elif p.status == 'rejected' %}table-danger{% elif p.status == 'pending' %}table-warning{% endif %}">
+                            <td>
+                                <strong>{{ p.name }}</strong>
+                            </td>
+                            <td>{{ p.contact }}</td>
+                            <td><code class="text-dark">{{ p.utr }}</code></td>
+                            <td>
+                                <img src="{{ p.screenshot_url }}" class="screenshot-thumbnail" alt="Payment Proof" data-bs-toggle="modal" data-bs-target="#imgModal{{ loop.index }}">
+                                
+                                <!-- Screenshot Modal -->
+                                <div class="modal fade" id="imgModal{{ loop.index }}" tabindex="-1">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Payment Proof - {{ p.name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <img src="{{ p.screenshot_url }}" class="img-fluid" alt="Payment Proof">
+                                                <hr>
+                                                <p>UTR: <strong>{{ p.utr }}</strong> | Team: {{ p.name }}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="{{ p.screenshot_url }}" target="_blank" class="btn btn-primary btn-sm">Open Original Full Size</a>
+                                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span class="status-badge badge-{{ p.status }}">{{ p.status }}</span>
+                            </td>
+                            <td><small class="text-muted">{{ p.timestamp }}</small></td>
+                            <td class="text-end">
+                                {% if p.status == 'pending' %}
+                                <div class="btn-group">
+                                    <form action="{{ url_for('payment_action', utr=p.utr, action='approve') }}" method="POST" onsubmit="return confirm('APPROVE payment for {{ p.name }}? This will mark their registration as valid.')">
+                                        <button class="btn btn-success btn-sm me-1">✅ Approve</button>
+                                    </form>
+                                    <form action="{{ url_for('payment_action', utr=p.utr, action='reject') }}" method="POST" onsubmit="return confirm('REJECT payment for {{ p.name }}? This will mark their registration as invalid.')">
+                                        <button class="btn btn-danger btn-sm">❌ Reject</button>
+                                    </form>
+                                </div>
+                                {% else %}
+                                <span class="text-muted">Locked - {{ p.status|upper }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% if not payments %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">No payment records found matching the current filter.</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
